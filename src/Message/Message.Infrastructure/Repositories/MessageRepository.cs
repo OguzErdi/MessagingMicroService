@@ -17,7 +17,7 @@ namespace Message.Infrastructure.Repositories
             this.dbContext = dbContext;
         }
 
-        public Task<bool> AddMessage(string senderUsername, string recieverUsername, string content)
+        public Task<bool> AddMessage(MessageEntity messageEntity)
         {
             throw new NotImplementedException();
         }

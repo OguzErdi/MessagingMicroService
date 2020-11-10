@@ -9,7 +9,7 @@ namespace Message.Application.Interfaces
     public interface IMessageService
     {
         Task<bool> AddMessage(MessageEntity messageEntity);
-
-        Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername);
+        Task<MessageEntity> GetLastMessage(string senderUsername, string recieverUsername);
+        Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername);
     }
 }

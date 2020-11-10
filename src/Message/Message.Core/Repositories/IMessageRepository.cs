@@ -8,8 +8,8 @@ namespace Message.Core.Repositories
 {
     public interface IMessageRepository
     {
-        Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername);
+        Task<bool> AddMessage(MessageEntity messageEntity);
         Task<MessageEntity> GetLastMessage(string senderUsername, string recieverUsername);
-        Task<bool> AddMessage(string senderUsername, string recieverUsername, string content);
+        Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername);
     }
 }
