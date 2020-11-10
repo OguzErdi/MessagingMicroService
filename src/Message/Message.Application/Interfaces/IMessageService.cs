@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Message.Core.Entities;
 
 namespace Message.Application.Interfaces
 {
     public interface IMessageService
     {
-        bool AddMessage(string senderUsername, string recieverUsername, string content);
+        Task<bool> AddMessage(MessageEntity messageEntity);
 
-        MessageEntity GetMessage(string senderUsername, string recieverUsername);
+        Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername);
     }
 }

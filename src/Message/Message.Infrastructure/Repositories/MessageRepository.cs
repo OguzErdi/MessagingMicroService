@@ -4,6 +4,7 @@ using Message.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Message.Infrastructure.Repositories
 {
@@ -16,17 +17,17 @@ namespace Message.Infrastructure.Repositories
             this.dbContext = dbContext;
         }
 
-        public bool AddMessage(string senderUsername, string recieverUsername, string content)
+        public Task<bool> AddMessage(string senderUsername, string recieverUsername, string content)
         {
             throw new NotImplementedException();
         }
 
-        public MessageEntity GetLastMessage(string senderUsername, string recieverUsername)
+        public Task<MessageEntity> GetLastMessage(string senderUsername, string recieverUsername)
         {
             throw new NotImplementedException();
         }
 
-        public List<MessageEntity> GetMessages(string senderUsername, string recieverUsername)
+        public Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername)
         {
             throw new NotImplementedException();
         }

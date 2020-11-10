@@ -4,6 +4,7 @@ using Message.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Message.Application.Services
 {
@@ -16,12 +17,12 @@ namespace Message.Application.Services
             this.messageRepository = messageRepository;
         }
 
-        public bool AddMessage(string senderUsername, string recieverUsername, string content)
+        public Task<bool> AddMessage(MessageEntity messageEntity)
         {
             throw new NotImplementedException();
         }
 
-        public MessageEntity GetMessage(string senderUsername, string recieverUsername)
+        public Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername)
         {
             throw new NotImplementedException();
         }
