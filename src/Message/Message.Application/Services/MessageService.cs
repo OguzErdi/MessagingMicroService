@@ -30,7 +30,7 @@ namespace Message.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername)
+        public Task<List<MessageEntity>> GetAllMessages(string senderUsername, string recieverUsername)
         {
             throw new NotImplementedException();
         }

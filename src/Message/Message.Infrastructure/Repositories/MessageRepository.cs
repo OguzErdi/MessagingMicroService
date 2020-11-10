@@ -22,7 +22,7 @@ namespace Message.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<MessageEntity> GetLastMessage(string senderUsername, string recieverUsername)
+        public Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername)
         {
             throw new NotImplementedException();
         }
