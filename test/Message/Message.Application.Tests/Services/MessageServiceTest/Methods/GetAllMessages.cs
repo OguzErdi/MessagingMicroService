@@ -15,17 +15,17 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
 
         [Theory]
         [ClassData(typeof(ThereAreMessages_ReturnMessageList))]
-        public async Task ThereAreMessages_ReturnMessageList(string senderUsername, string recieverUsername)
+        public async Task ThereAreMessages_ReturnMessageList(string senderUsername, string receiverUsername)
         {
             //arrange
             var actualMessageList = new List<MessageEntity>();
-            actualMessageList.Add(new MessageEntity(senderUsername, recieverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, recieverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, recieverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, recieverUsername, "mesaj"));
+            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
+            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
+            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
+            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
 
             mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((string senderUserName, string recieverUsername) =>
+                .Returns((string senderUserName, string receiverUsername) =>
                 {
                     return Task.FromResult(actualMessageList);
                 });
@@ -34,7 +34,7 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetAllMessages(senderUsername, recieverUsername);
+            var result = await messageService.GetAllMessages(senderUsername, receiverUsername);
 
             //assert
             Assert.Equal(result, actualMessageList);
@@ -43,11 +43,11 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
 
         [Theory]
         [ClassData(typeof(ThereAreNoMessages_ReturnNull))]
-        public async Task ThereAreNoMessages_ReturnNull(string senderUsername, string recieverUsername)
+        public async Task ThereAreNoMessages_ReturnNull(string senderUsername, string receiverUsername)
         {
             //arrange
             mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((string senderUserName, string recieverUsername) =>
+                .Returns((string senderUserName, string receiverUsername) =>
                 {
                     return Task.FromResult<List<MessageEntity>>(null);
                 });
@@ -56,7 +56,7 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetAllMessages(senderUsername, recieverUsername);
+            var result = await messageService.GetAllMessages(senderUsername, receiverUsername);
 
             //assert
             Assert.Null(result);

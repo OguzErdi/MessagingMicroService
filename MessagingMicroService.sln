@@ -11,29 +11,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{00879B98-1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Message", "Message", "{0335E4DA-DA91-4E52-AE5E-938B7B47F99B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.API", "src\User\User.API\User.API.csproj", "{001D1059-C93C-4A11-B010-2948621046DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.API", "src\User\User.API\User.API.csproj", "{001D1059-C93C-4A11-B010-2948621046DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Infrastructer", "src\User\User.Infrastructer\User.Infrastructer.csproj", "{2C88B49C-7423-47DC-8C02-E2B2C100DEFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Infrastructer", "src\User\User.Infrastructer\User.Infrastructer.csproj", "{2C88B49C-7423-47DC-8C02-E2B2C100DEFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Core", "src\User\User.Core\User.Core.csproj", "{D24FF528-EF3B-4ACB-8267-AF5498549FF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Core", "src\User\User.Core\User.Core.csproj", "{D24FF528-EF3B-4ACB-8267-AF5498549FF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Application", "src\User\User.Application\User.Application.csproj", "{E9453E8B-BBDD-4D16-8DCB-12F9D2796C51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Application", "src\User\User.Application\User.Application.csproj", "{E9453E8B-BBDD-4D16-8DCB-12F9D2796C51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.API", "src\Message\Message.API\Message.API.csproj", "{D6B0767D-9F7F-4B71-A990-60A6CBA0B856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.API", "src\Message\Message.API\Message.API.csproj", "{D6B0767D-9F7F-4B71-A990-60A6CBA0B856}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Application", "src\Message\Message.Application\Message.Application.csproj", "{7CA7604D-9358-4237-9D79-BC29FBB6F081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Application", "src\Message\Message.Application\Message.Application.csproj", "{7CA7604D-9358-4237-9D79-BC29FBB6F081}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Core", "src\Message\Message.Core\Message.Core.csproj", "{EDD55E46-94AE-47C9-8B91-D4740C819CD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Core", "src\Message\Message.Core\Message.Core.csproj", "{EDD55E46-94AE-47C9-8B91-D4740C819CD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Infrastructure", "src\Message\Message.Infrastructure\Message.Infrastructure.csproj", "{AEB84D81-D159-4AFA-B931-887D5728BD5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Infrastructure", "src\Message\Message.Infrastructure\Message.Infrastructure.csproj", "{AEB84D81-D159-4AFA-B931-887D5728BD5E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Message", "Message", "{9EC889D1-C162-4C63-8CE6-4630D353C712}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "User", "User", "{541BB1B0-6CAC-4CC0-BDF2-7FFDE0F58C28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Message.Application.Tests", "test\Message\Message.Application.Tests\Message.Application.Tests.csproj", "{339E339C-0AA6-4CA2-BBA4-88FEFD6A3F73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Message.Application.Tests", "test\Message\Message.Application.Tests\Message.Application.Tests.csproj", "{339E339C-0AA6-4CA2-BBA4-88FEFD6A3F73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.Application.Tests", "test\User\User.Application.Tests\User.Application.Tests.csproj", "{42EF4879-A15D-4B38-AAD4-B76E11B1DE25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Application.Tests", "test\User\User.Application.Tests\User.Application.Tests.csproj", "{42EF4879-A15D-4B38-AAD4-B76E11B1DE25}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D03186B3-CE1B-4F3E-B5C8-723C833DC529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{42EF4879-A15D-4B38-AAD4-B76E11B1DE25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42EF4879-A15D-4B38-AAD4-B76E11B1DE25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42EF4879-A15D-4B38-AAD4-B76E11B1DE25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D03186B3-CE1B-4F3E-B5C8-723C833DC529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03186B3-CE1B-4F3E-B5C8-723C833DC529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03186B3-CE1B-4F3E-B5C8-723C833DC529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03186B3-CE1B-4F3E-B5C8-723C833DC529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

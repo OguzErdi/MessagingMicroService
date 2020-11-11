@@ -15,13 +15,13 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
         //todo: mesajı queue şeklinde verecek bir yapı düşün.
         [Theory]
         [ClassData(typeof(ThereIsUnSendedMessage_ReturnLastMessage))]
-        public async Task ThereIsUnSendedMessage_ReturnLastMessage(string senderUsername, string recieverUsername)
+        public async Task ThereIsUnSendedMessage_ReturnLastMessage(string senderUsername, string receiverUsername)
         {
             //arrange
-            var actualLastMessage = new MessageEntity(senderUsername, recieverUsername, "son mesaj");
+            var actualLastMessage = new MessageEntity(senderUsername, receiverUsername, "son mesaj");
 
             mockMessageRepository.Setup(x => x.GetMessage(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((string senderUserName, string recieverUsername) =>
+                .Returns((string senderUserName, string receiverUsername) =>
                 {   
                     return Task.FromResult(actualLastMessage);
                 });
@@ -30,7 +30,7 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetLastMessage(senderUsername, recieverUsername);
+            var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
             Assert.Equal(result, actualLastMessage);
@@ -40,11 +40,11 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
 
         [Theory]
         [ClassData(typeof(ThereIsNotUnSendedMessage_ReturnNull))]
-        public async Task ThereIsNotUnSendedMessage_ReturnNull(string senderUsername, string recieverUsername)
+        public async Task ThereIsNotUnSendedMessage_ReturnNull(string senderUsername, string receiverUsername)
         {
             //arrange
             mockMessageRepository.Setup(x => x.GetMessage(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns((string senderUserName, string recieverUsername) =>
+                .Returns((string senderUserName, string receiverUsername) =>
                 {
                     return Task.FromResult<MessageEntity>(null);
                 });
@@ -53,7 +53,7 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetLastMessage(senderUsername, recieverUsername);
+            var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
             Assert.Null(result);

@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+    messagemicroservice_messagedb:
+        image: redis #Redis offical image name is redis
+
+    messagemicroservice_message.api:
+        image: ${DOCKER_REGISTRY-}messagemicroservice_messageapi
+        build:
+            context: .
+            dockerfile: src/Message/Message.API/Dockerfile
