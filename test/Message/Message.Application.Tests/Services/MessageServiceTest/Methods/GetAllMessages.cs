@@ -21,21 +21,24 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             Queue<string> messageLineList = new Queue<string>(new[] { "mesaj 1", "mesaj 2"});
             var actualMessageList = new MessageQueue(senderUsername, receiverUsername, messageLineList);
 
-            mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
+            mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {
                     return Task.FromResult(actualMessageList);
                 });
             mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
 
-            var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
+            var messageService = new MessageService(
+                mockMessageQueueRepository.Object,
+                mockMessageHistoryRepository.Object,
+                mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetAllMessages(senderUsername, receiverUsername);
+            var result = await messageService.GetMessageHistory(senderUsername, receiverUsername);
 
             //assert
             Assert.Equal(result, actualMessageList);
-            mockMessageRepository.Verify(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            mockMessageQueueRepository.Verify(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         [Theory]
@@ -43,21 +46,24 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
         public async Task ThereAreNoMessages_ReturnNull(string senderUsername, string receiverUsername)
         {
             //arrange
-            mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
+            mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {
                     return Task.FromResult<MessageQueue>(null);
                 });
             mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
 
-            var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
+            var messageService = new MessageService(
+                mockMessageQueueRepository.Object,
+                mockMessageHistoryRepository.Object,
+                mockUserProvider.Object);
 
             //act
-            var result = await messageService.GetAllMessages(senderUsername, receiverUsername);
+            var result = await messageService.GetMessageHistory(senderUsername, receiverUsername);
 
             //assert
             Assert.Null(result);
-            mockMessageRepository.Verify(x => x.AddMessage(It.IsAny<MessageEntity>()), Times.Once);
+            mockMessageQueueRepository.Verify(x => x.UpdateMessageQueue(It.IsAny<MessageQueue>()), Times.Once);
             mockUserProvider.Verify(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }

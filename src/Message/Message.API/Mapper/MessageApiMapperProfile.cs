@@ -12,7 +12,7 @@ namespace Message.API.Mapper
     {
         public BasketApiMapperProfile()
         {
-            CreateMap<MessageQueue, MessageViewModel>().ReverseMap();
+            CreateMap<MessageEntity, MessageViewModel>().ReverseMap();
         }
     }
 }

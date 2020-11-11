@@ -18,23 +18,27 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
         public async Task ThereIsUnSendedMessage_ReturnLastMessage(string senderUsername, string receiverUsername)
         {
             //arrange
-            var actualLastMessage = new MessageEntity(senderUsername, receiverUsername, "son mesaj");
+            Queue<string> dummyMessageQueue = new Queue<string>(new[] { "mesaj 1", "mesaj 2" } );
+            var actualMessageQueue = new MessageQueue(senderUsername, receiverUsername, dummyMessageQueue);
 
-            mockMessageRepository.Setup(x => x.GetMessage(It.IsAny<string>(), It.IsAny<string>()))
+            mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {   
-                    return Task.FromResult(actualLastMessage);
+                    return Task.FromResult(actualMessageQueue);
                 });
             mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
 
-            var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
+            var messageService = new MessageService(
+                mockMessageQueueRepository.Object,
+                mockMessageHistoryRepository.Object,
+                mockUserProvider.Object);
 
             //act
             var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
-            Assert.Equal(result, actualLastMessage);
-            mockMessageRepository.Verify(x => x.AddMessage(It.IsAny<MessageEntity>()), Times.Once);
+            Assert.Equal(result.MessageLine, actualMessageQueue.MessageLines.Peek());
+            mockMessageQueueRepository.Verify(x => x.UpdateMessageQueue(It.IsAny<MessageQueue>()), Times.Once);
             mockUserProvider.Verify(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
@@ -43,21 +47,24 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
         public async Task ThereIsNotUnSendedMessage_ReturnNull(string senderUsername, string receiverUsername)
         {
             //arrange
-            mockMessageRepository.Setup(x => x.GetMessage(It.IsAny<string>(), It.IsAny<string>()))
+            mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {
-                    return Task.FromResult<MessageEntity>(null);
+                    return Task.FromResult<MessageQueue>(null);
                 });
             mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
-            
-            var messageService = new MessageService(this.mockMessageRepository.Object, this.mockUserProvider.Object);
+
+            var messageService = new MessageService(
+                mockMessageQueueRepository.Object,
+                mockMessageHistoryRepository.Object,
+                mockUserProvider.Object);
 
             //act
             var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
             Assert.Null(result);
-            mockMessageRepository.Verify(x => x.AddMessage(It.IsAny<MessageEntity>()), Times.Once);
+            mockMessageQueueRepository.Verify(x => x.UpdateMessageQueue(It.IsAny<MessageQueue>()), Times.Once);
             mockUserProvider.Verify(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }

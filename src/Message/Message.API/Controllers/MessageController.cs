@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
+using Message.API.ViewModels;
 using Message.Application.Interfaces;
+using Message.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,43 +17,63 @@ namespace Message.API.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private IMessageService messageService;
+        private readonly IMessageService messageService;
+        private readonly IMapper mapper;
 
-        public MessageController(IMessageService messageService)
+        public MessageController(IMessageService messageService, IMapper mapper)
         {
             this.messageService = messageService;
+            this.mapper = mapper;
         }
 
-        // GET: api/<MessageController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("{receiverUsername}")]
+        [ProducesResponseType(typeof(MessageViewModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<MessageViewModel>> GetAsync(string receiverUsername)
         {
-            return new string[] { "value1", "value2" };
+            var messageEntity = await this.messageService.GetLastMessage("erdi", receiverUsername);
+            var mapped = this.mapper.Map<MessageViewModel>(messageEntity);
+            if (mapped == null)
+            {
+                throw new Exception($"Entity could not be mapped.");
+            }
+
+            return mapped;
         }
 
-        // GET api/<MessageController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("history/{receiverUsername}")]
+        public async Task<MessageQueue> GeHistorytAsync(string receiverUsername)
         {
-            return "value";
+            var messageHistory = await this.messageService.GetMessageHistory("erdi", receiverUsername);
+            
+
+            //var mapped = this.mapper.Map<MessageViewModel>(messageHistory);
+            //if (mapped == null)
+            //{
+            //    throw new Exception($"Entity could not be mapped.");
+            //}
+
+            return messageHistory;
         }
 
-        // POST api/<MessageController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPut("{receiverUsername}")]
+        public async Task PostAsync(string receiverUsername, [FromBody] MessageViewModel messageViewModel)
         {
+            var mapped = this.mapper.Map<MessageEntity>(messageViewModel);
+            if (mapped == null)
+            {
+                throw new Exception($"Entity could not be mapped.");
+            }
+
+            var result = await this.messageService.AddMessage(mapped);
+            if (result)
+            {
+                Ok();
+            }
+            else
+            {
+                BadRequest();
+            }
         }
 
-        // PUT api/<MessageController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<MessageController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

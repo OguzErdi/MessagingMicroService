@@ -11,6 +11,7 @@ using Message.Core.Data;
 using Message.Core.Providers;
 using Message.Core.Repositories;
 using Message.Infrastructure.Data;
+using Message.Infrastructure.KeyGenerator;
 using Message.Infrastructure.Providers;
 using Message.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -54,7 +55,9 @@ namespace Message.API
 
             services.AddScoped<IMessageDbContext, MessageDbContext>();
             services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IKeyGenerator, KeyGenarator>();
+            services.AddScoped<IMessageQueueRepository, MessageQueueRepository>();
+            services.AddScoped<IMessageHistoryRepository, MessageHistoryRepository>();
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddTransient<IValidator<MessageViewModel>, MessageViewModelValidator>();
 

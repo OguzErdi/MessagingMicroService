@@ -9,12 +9,14 @@ namespace Message.Application.Tests.Services.MessageServiceTest
 {
     public abstract class MessageServiceBaseTest
     {
-        protected readonly Mock<IMessageRepository> mockMessageRepository;
+        protected readonly Mock<IMessageQueueRepository> mockMessageQueueRepository;
+        protected readonly Mock<IMessageHistoryRepository> mockMessageHistoryRepository;
         protected readonly Mock<IUserProvider> mockUserProvider;
 
         public MessageServiceBaseTest()
         {
-            mockMessageRepository = new Mock<IMessageRepository>();
+            mockMessageQueueRepository = new Mock<IMessageQueueRepository>();
+            mockMessageHistoryRepository = new Mock<IMessageHistoryRepository>();
             mockUserProvider = new Mock<IUserProvider>();
         }
     }
