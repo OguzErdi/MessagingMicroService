@@ -27,7 +27,7 @@ namespace Message.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<MessageEntity>> GetMessages(string senderUsername, string receiverUsername)
+        public Task<MessageQueue> GetMessages(string senderUsername, string receiverUsername)
         {
             throw new NotImplementedException();
         }

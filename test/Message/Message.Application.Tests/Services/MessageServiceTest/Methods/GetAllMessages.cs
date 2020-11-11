@@ -18,11 +18,8 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
         public async Task ThereAreMessages_ReturnMessageList(string senderUsername, string receiverUsername)
         {
             //arrange
-            var actualMessageList = new List<MessageEntity>();
-            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
-            actualMessageList.Add(new MessageEntity(senderUsername, receiverUsername, "mesaj"));
+            Queue<string> messageLineList = new Queue<string>(new[] { "mesaj 1", "mesaj 2"});
+            var actualMessageList = new MessageQueue(senderUsername, receiverUsername, messageLineList);
 
             mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
@@ -49,7 +46,7 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             mockMessageRepository.Setup(x => x.GetMessages(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {
-                    return Task.FromResult<List<MessageEntity>>(null);
+                    return Task.FromResult<MessageQueue>(null);
                 });
             mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
 

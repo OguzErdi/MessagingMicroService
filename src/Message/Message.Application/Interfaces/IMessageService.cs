@@ -10,6 +10,6 @@ namespace Message.Application.Interfaces
     {
         Task<bool> AddMessage(MessageEntity messageEntity);
         Task<MessageEntity> GetLastMessage(string senderUsername, string receiverUsername);
-        Task<List<MessageEntity>> GetAllMessages(string senderUsername, string receiverUsername);
+        Task<MessageQueue> GetAllMessages(string senderUsername, string receiverUsername);
     }
 }

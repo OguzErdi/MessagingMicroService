@@ -25,12 +25,12 @@ namespace Message.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<MessageEntity> GetLastMessage(string senderUsername, string receiverUsername)
+        public Task<MessageQueue> GetAllMessages(string senderUsername, string receiverUsername)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<MessageEntity>> GetAllMessages(string senderUsername, string receiverUsername)
+        public Task<MessageEntity> GetLastMessage(string senderUsername, string receiverUsername)
         {
             throw new NotImplementedException();
         }

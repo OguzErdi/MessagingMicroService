@@ -10,6 +10,6 @@ namespace Message.Core.Repositories
     {
         Task<bool> AddMessage(MessageEntity messageEntity);
         Task<MessageEntity> GetMessage(string senderUsername, string receiverUsername);
-        Task<List<MessageEntity>> GetMessages(string senderUsername, string receiverUsername);
+        Task<MessageQueue> GetMessages(string senderUsername, string receiverUsername);
     }
 }
