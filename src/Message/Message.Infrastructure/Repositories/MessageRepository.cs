@@ -22,12 +22,12 @@ namespace Message.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername)
+        public Task<MessageEntity> GetMessage(string senderUsername, string receiverUsername)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername)
+        public Task<List<MessageEntity>> GetMessages(string senderUsername, string receiverUsername)
         {
             throw new NotImplementedException();
         }

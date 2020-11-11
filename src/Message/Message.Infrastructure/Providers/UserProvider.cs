@@ -12,5 +12,10 @@ namespace Message.Infrastructure.Providers
         {
             throw new NotImplementedException();
         }
+
+        public Task<bool> IsUserRegistered(string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

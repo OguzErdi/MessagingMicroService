@@ -8,5 +8,6 @@ namespace Message.Core.Providers
     public interface IUserProvider
     {
         Task<bool> IsUserBlocked(string senderUsername, string recieverUsernam);
+        Task<bool> IsUserRegistered(string username);
     }
 }

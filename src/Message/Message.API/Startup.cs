@@ -92,6 +92,12 @@ namespace Message.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Message API V1");
+            });
         }
     }
 }

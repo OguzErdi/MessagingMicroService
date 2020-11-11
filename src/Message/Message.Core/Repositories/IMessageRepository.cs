@@ -9,7 +9,7 @@ namespace Message.Core.Repositories
     public interface IMessageRepository
     {
         Task<bool> AddMessage(MessageEntity messageEntity);
-        Task<MessageEntity> GetMessage(string senderUsername, string recieverUsername);
-        Task<List<MessageEntity>> GetMessages(string senderUsername, string recieverUsername);
+        Task<MessageEntity> GetMessage(string senderUsername, string receiverUsername);
+        Task<List<MessageEntity>> GetMessages(string senderUsername, string receiverUsername);
     }
 }
