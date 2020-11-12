@@ -24,7 +24,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using static Message.API.ViewModels.MessageViewModel;
+using static Message.API.ViewModels.MessageLineViewModel;
 
 namespace Message.API
 {
@@ -59,7 +59,7 @@ namespace Message.API
             services.AddScoped<IMessageQueueRepository, MessageQueueRepository>();
             services.AddScoped<IMessageHistoryRepository, MessageHistoryRepository>();
             services.AddScoped<IUserProvider, UserProvider>();
-            services.AddTransient<IValidator<MessageViewModel>, MessageViewModelValidator>();
+            services.AddTransient<IValidator<MessageLineViewModel>, MessageLineViewModelValidator>();
 
             services.AddAutoMapper(typeof(Startup));
 

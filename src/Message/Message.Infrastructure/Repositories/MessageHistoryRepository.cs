@@ -20,12 +20,11 @@ namespace Message.Infrastructure.Repositories
             this.keyGenerator = keyGenerator;
         }
 
-        public async Task<bool> UpdateMessageHistory(MessageQueue messageHistory)
+        public async Task<bool> UpdateMessageHistory(MessageHistroy messageHistory)
         {
             string messageHistoryJson = JsonConvert.SerializeObject(messageHistory);
 
-            var messageHistoryKey = keyGenerator.GenerateForHistory(messageHistory.SenderUsername, messageHistory.ReceiverUsername);
-            var isUpdated = await context.Redis.StringSetAsync(messageHistoryKey, messageHistoryJson);
+            var isUpdated = await context.Redis.StringSetAsync(messageHistory.MessageHistoryKey, messageHistoryJson);
 
             if (!isUpdated)
             {
@@ -35,17 +34,18 @@ namespace Message.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<MessageQueue> GetMessageHistory(string senderUsername, string receiverUsername)
+        public async Task<MessageHistroy> GetMessageHistory(string who, string toWhom)
         {
-            var messageHistoryKey = keyGenerator.GenerateForQueue(senderUsername, receiverUsername);
+            var messageHistoryKey = keyGenerator.GenerateForMessageHistory(who, toWhom);
 
             var messageHistoryJson = await context.Redis.StringGetAsync(messageHistoryKey);
             if (messageHistoryJson.IsNullOrEmpty)
             {
-                return null;
+                var participants = new List<string>() { who, toWhom};
+                return new MessageHistroy(messageHistoryKey, participants, new List<MessageEntity>());
             }
 
-            var messageHistory = JsonConvert.DeserializeObject<MessageQueue>(messageHistoryJson);
+            var messageHistory = JsonConvert.DeserializeObject<MessageHistroy>(messageHistoryJson);
 
             return messageHistory;
         }

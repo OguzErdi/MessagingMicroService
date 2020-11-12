@@ -8,7 +8,7 @@ namespace Message.Core.Repositories
 {
     public interface IMessageHistoryRepository
     {
-        Task<bool> UpdateMessageHistory(MessageQueue messageHistory);
-        Task<MessageQueue> GetMessageHistory(string senderUsername, string receiverUsername);
+        Task<bool> UpdateMessageHistory(MessageHistroy messageHistory);
+        Task<MessageHistroy> GetMessageHistory(string who, string toWhom);
     }
 }

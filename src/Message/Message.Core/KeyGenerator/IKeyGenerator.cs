@@ -1,8 +1,10 @@
-﻿namespace Message.Infrastructure.Repositories
+﻿using System.Collections.Generic;
+
+namespace Message.Infrastructure.Repositories
 {
     public interface IKeyGenerator
     {
-        string GenerateForQueue(string senderUsername, string receiverUsername);
-        string GenerateForHistory(string senderUsername, string receiverUsername);
+        string GenerateForMessageQueue(string senderUsername, string receiverUsername);
+        string GenerateForMessageHistory(string who, string toWhom);
     }
 }

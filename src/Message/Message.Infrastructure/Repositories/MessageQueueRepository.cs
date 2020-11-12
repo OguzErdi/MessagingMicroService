@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Message.Infrastructure.Repositories
@@ -24,8 +25,7 @@ namespace Message.Infrastructure.Repositories
         {
             string messageQueueJson = JsonConvert.SerializeObject(messageQueue);
 
-            var messageQueueKey = keyGenerator.GenerateForQueue(messageQueue.SenderUsername, messageQueue.ReceiverUsername);
-            var isUpdated = await context.Redis.StringSetAsync(messageQueueKey, messageQueueJson);
+            var isUpdated = await context.Redis.StringSetAsync(messageQueue.MessageQueueKey, messageQueueJson);
 
             if (!isUpdated)
             {
@@ -38,12 +38,12 @@ namespace Message.Infrastructure.Repositories
 
         public async Task<MessageQueue> GetMessageQueue(string senderUsername, string receiverUsername)
         {
-            var messageQueueKey = keyGenerator.GenerateForQueue(senderUsername, receiverUsername);
+            var messageQueueKey = keyGenerator.GenerateForMessageQueue(senderUsername, receiverUsername);
 
             var messageQueueJson = await context.Redis.StringGetAsync(messageQueueKey);
             if (messageQueueJson.IsNullOrEmpty)
             {
-                return null;
+                return new MessageQueue(messageQueueKey, senderUsername, receiverUsername, new Queue<string>());
             }
 
             var messageQueue = JsonConvert.DeserializeObject<MessageQueue>(messageQueueJson);

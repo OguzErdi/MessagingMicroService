@@ -25,49 +25,52 @@ namespace Message.Application.Services
             this.userProvider = userProvider;
         }
 
-        public async Task<bool> AddMessage(MessageEntity messageEntity)
+        public async Task<bool> AddMessage(string messageLine, string senderUsername, string receiverUsername)
         {
-            var isReceiverExist = await userProvider.IsUserRegistered(messageEntity.ReceiverUsername);
+            var isReceiverExist = await userProvider.IsUserRegistered(receiverUsername);
             if (!isReceiverExist)
             {
                 return false;
             }
 
-            var isReceiverBlocked = await userProvider.IsUserBlocked(messageEntity.SenderUsername, messageEntity.ReceiverUsername);
+            var isReceiverBlocked = await userProvider.IsUserBlocked(senderUsername, receiverUsername);
             if (isReceiverBlocked)
             {
                 return false;
             }
 
-            var messageQueue = await this.messageQueueRepository.GetMessageQueue(messageEntity.SenderUsername, messageEntity.ReceiverUsername);
-            messageQueue.MessageLines.Enqueue(messageEntity.MessageLine);
+            var messageQueue = await this.messageQueueRepository.GetMessageQueue(senderUsername, receiverUsername);
+            messageQueue.MessageLines.Enqueue(messageLine);
             await this.messageQueueRepository.UpdateMessageQueue(messageQueue);
             
-            await AddMessageToHistory(messageEntity);
+            await AddMessageToHistory(messageLine, senderUsername, receiverUsername);
 
             return true;
         }
 
-        private async Task AddMessageToHistory(MessageEntity messageEntity)
+        private async Task AddMessageToHistory(string messageLine, string senderUsername, string receiverUsername)
         {
-            var messageHistory = await this.messageHistoryRepository.GetMessageHistory(messageEntity.SenderUsername, messageEntity.ReceiverUsername);
-            messageHistory.MessageLines.Enqueue(messageEntity.MessageLine);
-            await this.messageHistoryRepository.UpdateMessageHistory(messageHistory);
+            var messageEntity = new MessageEntity(senderUsername, receiverUsername, messageLine, DateTime.Now);
+            var messageHistory = await this.messageHistoryRepository.GetMessageHistory(senderUsername, receiverUsername);
+
+            messageHistory.MessageEntities.Add(messageEntity);
+
+            await this.messageHistoryRepository.UpdateMessageHistory(messageHistory); 
         }
 
-        public async Task<MessageQueue> GetMessageHistory(string senderUsername, string receiverUsername)
+        public async Task<MessageHistroy> GetMessageHistory(string who, string toWhom)
         {
-            var isReceiverExist = await userProvider.IsUserRegistered(receiverUsername);
+            var isReceiverExist = await userProvider.IsUserRegistered(toWhom);
             if (!isReceiverExist)
             {
                 return null;
             }
 
-            var messageHistory = await this.messageHistoryRepository.GetMessageHistory(senderUsername, receiverUsername);
+            var messageHistory = await this.messageHistoryRepository.GetMessageHistory(who, toWhom);
             return messageHistory;
         }
 
-        public async Task<MessageEntity> GetLastMessage(string senderUsername, string receiverUsername)
+        public async Task<string> GetLastMessage(string senderUsername, string receiverUsername)
         {
             var isReceiverExist = await userProvider.IsUserRegistered(receiverUsername);
             if (!isReceiverExist)
@@ -85,9 +88,7 @@ namespace Message.Application.Services
             var messageLine = messageQueue.MessageLines.Dequeue();
             await this.messageQueueRepository.UpdateMessageQueue(messageQueue);
 
-            var messageEntity = new MessageEntity(senderUsername, receiverUsername, messageLine);
-
-            return messageEntity;
+            return messageLine;
         }
     }
 }

@@ -8,8 +8,8 @@ namespace Message.Application.Interfaces
 {
     public interface IMessageService
     {
-        Task<bool> AddMessage(MessageEntity messageEntity);
-        Task<MessageEntity> GetLastMessage(string senderUsername, string receiverUsername);
-        Task<MessageQueue> GetMessageHistory(string senderUsername, string receiverUsername);
+        Task<bool> AddMessage(string messageLine, string senderUsername, string receiverUsername);
+        Task<string> GetLastMessage(string senderUsername, string receiverUsername);
+        Task<MessageHistroy> GetMessageHistory(string who, string toWhom);
     }
 }

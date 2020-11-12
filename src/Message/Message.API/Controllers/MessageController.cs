@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -27,23 +28,19 @@ namespace Message.API.Controllers
         }
 
         [HttpGet("{receiverUsername}")]
-        [ProducesResponseType(typeof(MessageViewModel), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<MessageViewModel>> GetAsync(string receiverUsername)
+        [ProducesResponseType(typeof(MessageLineViewModel), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<MessageLineViewModel>> GetAsync(string senderUsername, string receiverUsername)
         {
-            var messageEntity = await this.messageService.GetLastMessage("erdi", receiverUsername);
-            var mapped = this.mapper.Map<MessageViewModel>(messageEntity);
-            if (mapped == null)
-            {
-                throw new Exception($"Entity could not be mapped.");
-            }
+            var messageLine = await this.messageService.GetLastMessage(senderUsername, receiverUsername);
+            var messageLineViewModel = new MessageLineViewModel(senderUsername, receiverUsername, messageLine);
 
-            return mapped;
+            return messageLineViewModel;
         }
 
-        [HttpGet("history/{receiverUsername}")]
-        public async Task<MessageQueue> GeHistorytAsync(string receiverUsername)
+        [HttpGet("history/{withWhom}")]
+        public async Task<MessageHistroy> GeHistorytAsync(string senderUsername, string withWhom)
         {
-            var messageHistory = await this.messageService.GetMessageHistory("erdi", receiverUsername);
+            var messageHistory = await this.messageService.GetMessageHistory(senderUsername, withWhom);
             
 
             //var mapped = this.mapper.Map<MessageViewModel>(messageHistory);
@@ -55,16 +52,10 @@ namespace Message.API.Controllers
             return messageHistory;
         }
 
-        [HttpPut("{receiverUsername}")]
-        public async Task PostAsync(string receiverUsername, [FromBody] MessageViewModel messageViewModel)
+        [HttpPost]
+        public async Task PostAsync([FromBody]MessageLineViewModel messageLineViewModel)
         {
-            var mapped = this.mapper.Map<MessageEntity>(messageViewModel);
-            if (mapped == null)
-            {
-                throw new Exception($"Entity could not be mapped.");
-            }
-
-            var result = await this.messageService.AddMessage(mapped);
+            var result = await this.messageService.AddMessage(messageLineViewModel.MessageLine, messageLineViewModel.SenderUsername, messageLineViewModel.ReceiverUsername);
             if (result)
             {
                 Ok();

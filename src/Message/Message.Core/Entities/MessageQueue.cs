@@ -6,6 +6,7 @@ namespace Message.Core.Entities
 {
     public class MessageQueue
     {
+        public string MessageQueueKey { get; set; }
         public string SenderUsername { get; set; }
         public string ReceiverUsername { get; set; }
         public Queue<string> MessageLines { get; set; }
@@ -14,11 +15,12 @@ namespace Message.Core.Entities
         {
         }
 
-        public MessageQueue(string senderUsername, string receiverUsername, Queue<string> messageLine)
+        public MessageQueue(string messageQueueKey, string senderUsername, string receiverUsername, Queue<string> messageLines)
         {
+            MessageQueueKey = messageQueueKey;
             SenderUsername = senderUsername;
             ReceiverUsername = receiverUsername;
-            MessageLines = messageLine;
+            MessageLines = messageLines;
         }
     }
 }

@@ -10,12 +10,12 @@ namespace Message.Infrastructure.Providers
     {
         public Task<bool> IsUserBlocked(string senderUsername, string recieverUsernam)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(false);
         }
 
         public Task<bool> IsUserRegistered(string username)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
     }
 }
