@@ -1,6 +1,11 @@
 version: '3.4'
 
 services:
+    messagemicroservice_seq:
+        image: datalust/seq:latest
+        environment:
+            ACCEPT_EULA: Y
+
     messagemicroservice_messagedb:
         image: redis #Redis offical image name is redis
 

@@ -20,7 +20,6 @@ namespace Message.Application.Constants
         public static string MessageAddedToHistory = "Mesaj Historye eklendi";
 
         public static string GetMessageHistory = "Mesaj Historyisini al";
-        public static string ThereIsNoMessageInQueue = "Message Queue'da mesaj yok";
         public static string GetMessageFromQueue = "Message Queue'dan son mesajı al";
     }
 }

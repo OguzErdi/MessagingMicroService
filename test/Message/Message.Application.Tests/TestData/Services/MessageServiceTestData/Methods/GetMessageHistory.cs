@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Message.Application.Tests.TestData.Services.MessageServiceTestData.Methods
 {
-    public class GetAllMessages
+    public class GetMessageHistory
     {
         public class ThereAreMessages_ReturnMessageList : IEnumerable<object[]>
         {

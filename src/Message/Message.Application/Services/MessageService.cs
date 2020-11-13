@@ -81,7 +81,7 @@ namespace Message.Application.Services
             var messageHistory = await this.messageHistoryRepository.GetMessageHistory(who, toWhom);
 
             logger.LogInformation(Messages.GetMessageHistory);
-            return new SuccessDataResult<MessageHistroy>(messageHistory);
+            return new SuccessDataResult<MessageHistroy>(messageHistory, Messages.GetMessageHistory);
         }
 
         public async Task<IDataResult<string>> GetLastMessage(string senderUsername, string receiverUsername)
@@ -103,7 +103,7 @@ namespace Message.Application.Services
             var messageQueue = await this.messageQueueRepository.GetMessageQueue(senderUsername, receiverUsername);
             if (messageQueue.MessageLines.Count == 0)
             {
-                logger.LogInformation(Messages.ThereIsNoMessageInQueue);
+                logger.LogInformation(Messages.NoMessage);
                 return new ErrorDataResult<string>(Messages.NoMessage);
             }
 
@@ -111,7 +111,7 @@ namespace Message.Application.Services
             await this.messageQueueRepository.UpdateMessageQueue(messageQueue);
 
             logger.LogInformation(Messages.GetMessageFromQueue);
-            return new SuccessDataResult<string>(messageLine);
+            return new SuccessDataResult<string>(messageLine, Messages.GetMessageFromQueue);
         }
     }
 }

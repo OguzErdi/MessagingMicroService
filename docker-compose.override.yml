@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+    messagemicroservice_seq:
+        container_name: messagemicroservice_seq
+        restart: always
+        ports:
+            - "5341:80"
+
     messagemicroservice_messagedb:
         container_name: messagemicroservice_messagedb
         restart: always
@@ -14,6 +20,7 @@ services:
             - "ConnectionStrings:Redis=messagemicroservice_messagedb:6379" #should match the container name include Redis
         depends_on:
             - messagemicroservice_messagedb
+            - messagemicroservice_seq
         volumes:
             - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
@@ -33,6 +40,7 @@ services:
             - "ConnectionStrings:Redis=messagemicroservice_userdb:6379" #should match the container name include Redis
         depends_on:
             - messagemicroservice_userdb
+            - messagemicroservice_seq
         volumes:
             - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
             - ${HOME}/.aspnet/https:/root/.aspnet/https/

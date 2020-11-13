@@ -13,7 +13,7 @@ namespace Message.Application.Tests.TestData.Services.MessageServiceTestData.Met
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] { new MessageEntity(Constants.SenderUser, Constants.RecieverUser, "Test mesajı attım, geldi mi?")};
+                yield return new object[] { Constants.MessageLine1, Constants.SenderUser, Constants.RecieverUser };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -23,7 +23,7 @@ namespace Message.Application.Tests.TestData.Services.MessageServiceTestData.Met
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] { new MessageEntity(Constants.SenderUser, Constants.JustRegisteredUser, "Test mesajı attım, geldi mi?" )};
+                yield return new object[] { Constants.MessageLine2, Constants.SenderUser, Constants.RecieverUser };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -33,7 +33,7 @@ namespace Message.Application.Tests.TestData.Services.MessageServiceTestData.Met
         {
             public IEnumerator<object[]> GetEnumerator()
             {
-                yield return new object[] { new MessageEntity(Constants.SenderUser, Constants.UnRegisteredUser, "Test mesajı attım, geldi mi?" )};
+                yield return new object[] { Constants.MessageLine3, Constants.SenderUser, Constants.RecieverUser };
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

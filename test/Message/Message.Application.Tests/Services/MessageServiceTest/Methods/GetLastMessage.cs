@@ -1,4 +1,5 @@
-﻿using Message.Application.Services;
+﻿using Message.Application.Constants;
+using Message.Application.Services;
 using Message.Core.Entities;
 using Moq;
 using System;
@@ -12,34 +13,37 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
 {
     public class GetLastMessage : MessageServiceBaseTest
     {
-        //todo: mesajı queue şeklinde verecek bir yapı düşün.
         [Theory]
         [ClassData(typeof(ThereIsUnSendedMessage_ReturnLastMessage))]
         public async Task ThereIsUnSendedMessage_ReturnLastMessage(string senderUsername, string receiverUsername)
         {
             //arrange
-            Queue<string> dummyMessageQueue = new Queue<string>(new[] { "mesaj 1", "mesaj 2" } );
-            var actualMessageQueue = new MessageQueue(senderUsername, receiverUsername, dummyMessageQueue);
-
             mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
-                {   
-                    return Task.FromResult(actualMessageQueue);
+                {
+                    var messageQueue = new MessageQueue(Constants.MessageQueueKey, senderUserName, receiverUsername, Constants.MessageLines);
+                    return Task.FromResult(messageQueue);
                 });
-            mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+
+            mockUserProvider.Setup(x => x.IsUserRegistered(It.IsAny<string>())).ReturnsAsync(true);
+            mockUserProvider.Setup(x => x.IsBlockedByUser(It.IsAny<string>())).ReturnsAsync(false);
 
             var messageService = new MessageService(
                 mockMessageQueueRepository.Object,
                 mockMessageHistoryRepository.Object,
-                mockUserProvider.Object);
+                mockUserProvider.Object,
+                logger.Object);
 
             //act
             var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
-            Assert.Equal(result.MessageLine, actualMessageQueue.MessageLines.Peek());
-            mockMessageQueueRepository.Verify(x => x.UpdateMessageQueue(It.IsAny<MessageQueue>()), Times.Once);
-            mockUserProvider.Verify(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            Assert.True(result.Success);
+            Assert.Equal(Constants.MessageLine1, result.Data);
+            Assert.Equal(Messages.GetMessageFromQueue, result.Message);
+            mockMessageQueueRepository.Verify(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            mockUserProvider.Verify(x => x.IsUserRegistered(It.IsAny<string>()), Times.Once);
+            mockUserProvider.Verify(x => x.IsBlockedByUser(It.IsAny<string>()), Times.Once);
         }
 
         [Theory]
@@ -50,22 +54,29 @@ namespace Message.Application.Tests.Services.MessageServiceTest.Methods
             mockMessageQueueRepository.Setup(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns((string senderUserName, string receiverUsername) =>
                 {
-                    return Task.FromResult<MessageQueue>(null);
+                    var messageQueue = new MessageQueue(Constants.MessageQueueKey, senderUserName, receiverUsername, new Queue<string>());
+                    return Task.FromResult(messageQueue);
                 });
-            mockUserProvider.Setup(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+
+            mockUserProvider.Setup(x => x.IsUserRegistered(It.IsAny<string>())).ReturnsAsync(true);
+            mockUserProvider.Setup(x => x.IsBlockedByUser(It.IsAny<string>())).ReturnsAsync(false);
 
             var messageService = new MessageService(
                 mockMessageQueueRepository.Object,
                 mockMessageHistoryRepository.Object,
-                mockUserProvider.Object);
+                mockUserProvider.Object,
+                logger.Object);
 
             //act
             var result = await messageService.GetLastMessage(senderUsername, receiverUsername);
 
             //assert
-            Assert.Null(result);
-            mockMessageQueueRepository.Verify(x => x.UpdateMessageQueue(It.IsAny<MessageQueue>()), Times.Once);
-            mockUserProvider.Verify(x => x.IsUserBlocked(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal(Messages.NoMessage, result.Message);
+            mockMessageQueueRepository.Verify(x => x.GetMessageQueue(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            mockUserProvider.Verify(x => x.IsUserRegistered(It.IsAny<string>()), Times.Once);
+            mockUserProvider.Verify(x => x.IsBlockedByUser(It.IsAny<string>()), Times.Once);
         }
     }
 }
