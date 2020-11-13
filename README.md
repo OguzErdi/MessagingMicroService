@@ -1,7 +1,7 @@
 # MessagingMicroService
 A small microservice orianted messaging app which is developed in .Net Core 3.1.
 - Contains two Web API; one is Message API, the other one is User API. Both project architecture is based on Clean Architecture.
-- JWT Token is used for authantication.
+- JWT Bearer Token was used for authentication.
 - Message Project has Unit Test project.
 
 **To run project Docker Desktop must be installed.**
