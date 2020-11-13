@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Message.API.ViewModels;
 using Message.Application.Interfaces;
 using Message.Application.Services;
@@ -132,7 +133,7 @@ namespace Message.API
 
             #endregion
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
