@@ -32,38 +32,44 @@ namespace Message.API.Controllers
 
         [HttpGet("{senderUsername}")]
         [ProducesResponseType(typeof(MessageLineViewModel), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<MessageLineViewModel>> GetAsync(string senderUsername)
+        public async Task<IActionResult> GetAsync(string senderUsername)
         {
             var receiverUsername = User.FindFirst(ClaimTypes.Name)?.Value;
-            var messageLine = await this.messageService.GetLastMessage(senderUsername, receiverUsername);
-            var messageLineViewModel = new MessageLineViewModel(receiverUsername, messageLine);
+            var result = await this.messageService.GetLastMessage(senderUsername, receiverUsername);
+            if (result.Success)
+            {
+                var messageLineViewModel = new MessageLineViewModel(receiverUsername, result.Data);
+                return Ok(messageLineViewModel);
+            }
 
-            return messageLineViewModel;
+            return BadRequest(result.Message);
         }
 
         [HttpGet("history/{withWhom}")]
-        public async Task<MessageHistroy> GeHistorytAsync(string withWhom)
+        public async Task<IActionResult> GeHistorytAsync(string withWhom)
         {
             var senderUsername = User.FindFirst(ClaimTypes.Name)?.Value;
-            var messageHistory = await this.messageService.GetMessageHistory(senderUsername, withWhom);
-            
+            var result = await this.messageService.GetMessageHistory(senderUsername, withWhom);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
 
-            return messageHistory;
+            return BadRequest(result.Message);
         }
 
         [HttpPost]
-        public async Task PostAsync([FromBody]MessageLineViewModel messageLineViewModel)
+        public async Task<IActionResult> PostAsync([FromBody]MessageLineViewModel messageLineViewModel)
         {
             var senderUsername = User.FindFirst(ClaimTypes.Name)?.Value;
             var result = await this.messageService.AddMessage(messageLineViewModel.MessageLine, senderUsername, messageLineViewModel.ReceiverUsername);
-            if (result)
+            
+            if (result.Success)
             {
-                Ok();
+                return Ok(result.Message);
             }
-            else
-            {
-                BadRequest();
-            }
+
+            return BadRequest(result.Message);
         }
 
     }

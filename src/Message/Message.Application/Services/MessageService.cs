@@ -1,7 +1,9 @@
-﻿using Message.Application.Interfaces;
+﻿using Message.Application.Constants;
+using Message.Application.Interfaces;
 using Message.Core.Entities;
 using Message.Core.Providers;
 using Message.Core.Repositories;
+using Message.Core.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,27 +27,27 @@ namespace Message.Application.Services
             this.userProvider = userProvider;
         }
 
-        public async Task<bool> AddMessage(string messageLine, string senderUsername, string receiverUsername)
+        public async Task<IResult> AddMessage(string messageLine, string senderUsername, string receiverUsername)
         {
             var isReceiverExist = await userProvider.IsUserRegistered(receiverUsername);
             if (!isReceiverExist)
             {
-                return false;
+                return new ErrorResult(Messages.UserNotFound);
             }
 
             var isReceiverBlocked = await userProvider.IsUserBlocked(senderUsername, receiverUsername);
             if (isReceiverBlocked)
             {
-                return false;
+                return new ErrorResult(Messages.UserBlocked);
             }
 
             var messageQueue = await this.messageQueueRepository.GetMessageQueue(senderUsername, receiverUsername);
             messageQueue.MessageLines.Enqueue(messageLine);
             await this.messageQueueRepository.UpdateMessageQueue(messageQueue);
-            
+
             await AddMessageToHistory(messageLine, senderUsername, receiverUsername);
 
-            return true;
+            return new SuccessResult(Messages.MessageSended);
         }
 
         private async Task AddMessageToHistory(string messageLine, string senderUsername, string receiverUsername)
@@ -55,40 +57,46 @@ namespace Message.Application.Services
 
             messageHistory.MessageEntities.Add(messageEntity);
 
-            await this.messageHistoryRepository.UpdateMessageHistory(messageHistory); 
+            await this.messageHistoryRepository.UpdateMessageHistory(messageHistory);
         }
 
-        public async Task<MessageHistroy> GetMessageHistory(string who, string toWhom)
+        public async Task<IDataResult<MessageHistroy>> GetMessageHistory(string who, string toWhom)
         {
             var isReceiverExist = await userProvider.IsUserRegistered(toWhom);
             if (!isReceiverExist)
             {
-                return null;
+                return new ErrorDataResult<MessageHistroy>(Messages.UserNotFound);
             }
 
             var messageHistory = await this.messageHistoryRepository.GetMessageHistory(who, toWhom);
-            return messageHistory;
+            return new SuccessDataResult<MessageHistroy>(messageHistory);
         }
 
-        public async Task<string> GetLastMessage(string senderUsername, string receiverUsername)
+        public async Task<IDataResult<string>> GetLastMessage(string senderUsername, string receiverUsername)
         {
             var isSenderRegistered = await userProvider.IsUserRegistered(senderUsername);
             if (!isSenderRegistered)
             {
-                return null;
+                return new ErrorDataResult<string>(Messages.UserNotFound);
             }
 
             var isSenderBlocked = await userProvider.IsUserBlocked(receiverUsername, senderUsername);
             if (isSenderBlocked)
             {
-                return null;
+
+                return new ErrorDataResult<string>(Messages.UserBlocked);
             }
 
             var messageQueue = await this.messageQueueRepository.GetMessageQueue(senderUsername, receiverUsername);
+            if (messageQueue.MessageLines.Count == 0)
+            {
+                return new ErrorDataResult<string>(Messages.NoMessage);
+            }
+
             var messageLine = messageQueue.MessageLines.Dequeue();
             await this.messageQueueRepository.UpdateMessageQueue(messageQueue);
 
-            return messageLine;
+            return new SuccessDataResult<string>(messageLine);
         }
     }
 }
