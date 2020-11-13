@@ -52,7 +52,8 @@ namespace Message.API.Controllers
             var result = await this.messageService.GetMessageHistory(senderUsername, withWhom);
             if (result.Success)
             {
-                return Ok(result.Data);
+                var vmList = mapper.Map<List<MessageEntityViewModel>>(result.Data.MessageEntities);
+                return Ok(vmList);
             }
 
             return BadRequest(result.Message);

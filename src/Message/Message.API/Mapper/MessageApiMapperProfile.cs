@@ -12,7 +12,8 @@ namespace Message.API.Mapper
     {
         public BasketApiMapperProfile()
         {
-            CreateMap<MessageEntity, MessageLineViewModel>().ReverseMap();
+            CreateMap<MessageEntity, MessageEntityViewModel>()
+                .ForMember(x => x.Time, cd => cd.MapFrom(map => map.Time.ToString("dd/MM/yyyy")));
         }
     }
 }
