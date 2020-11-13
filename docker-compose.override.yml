@@ -19,3 +19,22 @@ services:
             - ${HOME}/.aspnet/https:/root/.aspnet/https/
         ports:
             - "8000:80"
+
+    messagemicroservice_userdb:
+        container_name: messagemicroservice_userdb
+        restart: always
+        ports:
+            - "6380:6379" #Redis officially exposing on that port
+
+    messagemicroservice_user.api:
+        container_name: messagemicroservice_userapi
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - "ConnectionStrings:Redis=messagemicroservice_userdb:6379" #should match the container name include Redis
+        depends_on:
+            - messagemicroservice_userdb
+        volumes:
+            - ${HOME}/.microsoft/usersecrets/:/root/.microsoft/usersecrets
+            - ${HOME}/.aspnet/https:/root/.aspnet/https/
+        ports:
+            - "9000:80"

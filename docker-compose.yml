@@ -9,3 +9,13 @@ services:
         build:
             context: .
             dockerfile: src/Message/Message.API/Dockerfile
+
+    messagemicroservice_userdb:
+        image: redis #Redis offical image name is redis
+
+    messagemicroservice_user.api:
+        image: ${DOCKER_REGISTRY-}messagemicroservice_userapi
+        build:
+            context: .
+            dockerfile: src/User/User.API/Dockerfile
+
