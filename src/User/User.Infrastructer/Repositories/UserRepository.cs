@@ -34,12 +34,12 @@ namespace User.Infrastructer.Repositories
             return !isUpdated ? null : userEntity;
         }
 
-        public async Task<bool> BlockUserAsync(string username, string blcokedUsername)
+        public async Task<bool> BlockUserAsync(string username, string blockedUsername)
         {
             var userEntityJson = await context.Redis.StringGetAsync(username);
             var userEntity = JsonConvert.DeserializeObject<UserEntity>(userEntityJson);
 
-            userEntity.BlockedUser.Add(blcokedUsername);
+            userEntity.BlockedUser.Add(blockedUsername);
 
             var updatedUserEntityJson = JsonConvert.SerializeObject(userEntity);
 
@@ -68,6 +68,15 @@ namespace User.Infrastructer.Repositories
         {
             var userEntityJson = await context.Redis.StringGetAsync(username);
             return !userEntityJson.IsNullOrEmpty;
+        }
+
+        public async Task<bool> IsUserBlockedAsync(string byUse, string blockUsername)
+        {
+            var userEntityJson = await context.Redis.StringGetAsync(byUse);
+            var userEntity = JsonConvert.DeserializeObject<UserEntity>(userEntityJson);
+
+
+            return userEntity.BlockedUser.Contains(blockUsername);
         }
     }
 }

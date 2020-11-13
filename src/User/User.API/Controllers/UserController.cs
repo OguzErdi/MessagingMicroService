@@ -51,13 +51,38 @@ namespace User.API.Controllers
         }
 
         [HttpPost("block/{username}")]
-        public async Task<ActionResult> PostBlockUserAsync(string username)
+        public async Task<IActionResult> PostBlockUserAsync(string username)
         {
             string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
-            var result = await userService.BlockUserAsync(currentUsername, username);
+            var result = await userService.IsBlockedUser(currentUsername, username);
             if (result.Success)
             {
                 return Ok(result.Message);
+            }
+
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("isblocked/{username}")]
+        public async Task<IActionResult> GetIsBlockedUser(string username)
+        {
+            string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
+            var result = await userService.IsBlockedUser(currentUsername, username);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("isexist/{username}")]
+        public async Task<IActionResult> GetIsUserExist(string username)
+        {
+            var result = await userService.IsUserExist(username);
+            if (result.Success)
+            {
+                return Ok(result.Data);
             }
 
             return BadRequest(result.Message);

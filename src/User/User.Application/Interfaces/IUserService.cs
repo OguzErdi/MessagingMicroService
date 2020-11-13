@@ -11,7 +11,8 @@ namespace User.Application.Interfaces
     public interface IUserService
     {
         Task<IDataResult<UserTokenModel>> LoginAsync(string username, string password);
-        Task<IResult> BlockUserAsync(string username, string blockedUsername);
+        Task<IDataResult<bool>> IsBlockedUser(string byUser, string blockedUsername);
+        Task<IDataResult<bool>> IsUserExist(string username);
         Task<IResult> RegisterAsync(string username, string password, string passworRepeat);
 
     }

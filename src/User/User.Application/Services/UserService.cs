@@ -55,7 +55,7 @@ namespace User.Application.Services
             return new SuccessDataResult<UserTokenModel>(new UserTokenModel(username, generatedToken), Messages.AccessTokenCreated);
         }
 
-        public async Task<IResult> BlockUserAsync(string username, string blockedUsername)
+        public async Task<IResult> IsBlockedUser(string username, string blockedUsername)
         {
             var isBlockedUserExist = await userRepository.IsUserExistAsync(blockedUsername);
             if (!isBlockedUserExist)
@@ -96,6 +96,32 @@ namespace User.Application.Services
             }
 
             return new SuccessResult(Messages.UserRegistered);
+        }
+
+        async Task<IDataResult<bool>> IUserService.IsBlockedUser(string byUser, string blockUsername)
+        {
+            var isUserExist = await userRepository.IsUserExistAsync(blockUsername);
+            if (!isUserExist)
+                return new ErrorDataResult<bool>(Messages.UserNotFound);
+
+            var isUserBlocked = await userRepository.IsUserBlockedAsync(byUser, blockUsername);
+            if (!isUserBlocked)
+            {
+                return new SuccessDataResult<bool>(false);
+            }
+
+            return new SuccessDataResult<bool>(true);
+        }
+
+        public async Task<IDataResult<bool>> IsUserExist(string username)
+        {
+            var isUserExist = await userRepository.IsUserExistAsync(username); 
+            if (!isUserExist)
+            {
+                return new SuccessDataResult<bool>(false);
+            }
+
+            return new SuccessDataResult<bool>(true);
         }
     }
 }
