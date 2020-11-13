@@ -12,5 +12,6 @@ namespace User.Core.Repositories
         Task<bool> IsUserExistAsync(string username);
         Task<bool> BlockUserAsync(string username, string blcokedUsername);
         Task<UserEntity> AddUserAsync(string username, string password);
+        bool VerifyPassword(UserEntity userEntity, string password);
     }
 }

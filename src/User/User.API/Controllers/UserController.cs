@@ -26,38 +26,41 @@ namespace User.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> PostRegister([FromBody] UserRegisterViewModel userRegisterViewModel)
+        public async Task<IActionResult> PostRegister([FromBody] UserRegisterViewModel userRegisterViewModel)
         {
             var result = await userService.RegisterAsync(userRegisterViewModel.Username, userRegisterViewModel.Password, userRegisterViewModel.PasswordRepeat);
 
-            if (result)
+            if (result.Success)
             {
-                return Ok();
+                return Ok(result.Message);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest(result.Message);
         }
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> PostLoginAsync([FromBody] UserViewModel userViewModel)
+        public async Task<IActionResult> PostLoginAsync([FromBody] UserViewModel userViewModel)
         {
-            var userTokenModel = await userService.LoginAsync(userViewModel.Username, userViewModel.Password);
-            return Ok(userTokenModel);
+            var result = await userService.LoginAsync(userViewModel.Username, userViewModel.Password);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
         }
 
         [HttpPost("block/{username}")]
         public async Task<ActionResult> PostBlockUserAsync(string username)
         {
-            string currentUsername = User.FindFirst(ClaimTypes.Name)?.Value;
-            if (currentUsername == null)
+            string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
+            var result = await userService.BlockUserAsync(currentUsername, username);
+            if (result.Success)
             {
-                return BadRequest();
+                return Ok(result.Message);
             }
 
-            var userTokenModel = await userService.BlockUserAsync(currentUsername, username);
-            return Ok();
+            return BadRequest(result.Message);
         }
     }
 }

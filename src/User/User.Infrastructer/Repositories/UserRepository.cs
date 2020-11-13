@@ -54,10 +54,14 @@ namespace User.Infrastructer.Repositories
                 return null;
             }
             var userEntity = JsonConvert.DeserializeObject<UserEntity>(userEntityJson);
+            return userEntity;
+        }
 
-            var isPasswordCorrect = passwordHasher.VerifyPassword(password, userEntity.PasswordHash);
+        public bool VerifyPassword(UserEntity userEntity, string password)
+        {
+            var isPasswordCorrect =  passwordHasher.VerifyPassword(password, userEntity.PasswordHash);
 
-            return !isPasswordCorrect ? null : userEntity;
+            return isPasswordCorrect;
         }
 
         public async Task<bool> IsUserExistAsync(string username)
