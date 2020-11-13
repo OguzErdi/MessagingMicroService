@@ -12,7 +12,7 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
 **After that, you can try api calls on Swagger pages of APIs**
 
 - Message API: [http://localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html).
-  - **To get last message from user*: /api/Message/{senderUsername}
+  - **To get last message from user**: /api/Message/{senderUsername}
   - **To get message history**: /api/Message/History/{withWhom}
   - **To send message to user**: /api/Message/{senderUsername}
 
@@ -21,7 +21,7 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
   - **To ger JWT token**: /api/User/Login
   - **To block user**: /api/User/Block/{username}
   - **To find out that you have blocked the user**: /api/User/IsBlockedUser/{username}
-  - **To find out you have blocked by whom*: /api/User/IsBlockedByUser/{username}
+  - **To find out you have blocked by whom**: /api/User/IsBlockedByUser/{username}
   - **To find out is user exist**: /api/User/IsExist/{username}
 
 **Also you can examine logs on Seq page**
