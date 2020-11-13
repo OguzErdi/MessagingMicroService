@@ -11,6 +11,7 @@ using Message.Application.Interfaces;
 using Message.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,17 +24,21 @@ namespace Message.API.Controllers
     {
         private readonly IMessageService messageService;
         private readonly IMapper mapper;
+        private readonly ILogger<MessageController> logger;
 
-        public MessageController(IMessageService messageService, IMapper mapper)
+        public MessageController(IMessageService messageService, IMapper mapper, ILogger<MessageController> logger)
         {
             this.messageService = messageService;
             this.mapper = mapper;
+            this.logger = logger;
+            logger.LogInformation("Hello first log in MessageController Constructor");
         }
 
         [HttpGet("{senderUsername}")]
         [ProducesResponseType(typeof(MessageLineViewModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync(string senderUsername)
         {
+
             var receiverUsername = User.FindFirst(ClaimTypes.Name)?.Value;
             var result = await this.messageService.GetLastMessage(senderUsername, receiverUsername);
             if (result.Success)
