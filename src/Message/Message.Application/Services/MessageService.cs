@@ -72,14 +72,14 @@ namespace Message.Application.Services
 
         public async Task<string> GetLastMessage(string senderUsername, string receiverUsername)
         {
-            var isReceiverExist = await userProvider.IsUserRegistered(receiverUsername);
-            if (!isReceiverExist)
+            var isSenderRegistered = await userProvider.IsUserRegistered(senderUsername);
+            if (!isSenderRegistered)
             {
                 return null;
             }
 
-            var isReceiverBlocked = await userProvider.IsUserBlocked(senderUsername, receiverUsername);
-            if (isReceiverBlocked)
+            var isSenderBlocked = await userProvider.IsUserBlocked(receiverUsername, senderUsername);
+            if (isSenderBlocked)
             {
                 return null;
             }

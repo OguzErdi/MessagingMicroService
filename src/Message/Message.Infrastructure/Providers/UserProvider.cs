@@ -8,7 +8,7 @@ namespace Message.Infrastructure.Providers
 {
     public class UserProvider : IUserProvider
     {
-        public Task<bool> IsUserBlocked(string senderUsername, string recieverUsernam)
+        public Task<bool> IsUserBlocked(string userBy, string questionedUser)
         {
             return Task.FromResult(false);
         }

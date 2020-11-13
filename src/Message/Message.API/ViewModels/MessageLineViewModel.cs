@@ -8,7 +8,6 @@ namespace Message.API.ViewModels
 {
     public class MessageLineViewModel
     {
-        public string SenderUsername { get; set; }
         public string ReceiverUsername { get; set; }
         public string MessageLine { get; set; }
 
@@ -16,9 +15,8 @@ namespace Message.API.ViewModels
         {
         }
 
-        public MessageLineViewModel(string senderUsername, string receiverUsername, string messageLine)
+        public MessageLineViewModel(string receiverUsername, string messageLine)
         {
-            SenderUsername = senderUsername;
             ReceiverUsername = receiverUsername;
             MessageLine = messageLine;
         }

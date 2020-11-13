@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Message.API.ViewModels;
 using Message.Application.Interfaces;
 using Message.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Message.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MessageController : ControllerBase
@@ -27,27 +30,23 @@ namespace Message.API.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{receiverUsername}")]
+        [HttpGet("{senderUsername}")]
         [ProducesResponseType(typeof(MessageLineViewModel), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<MessageLineViewModel>> GetAsync(string senderUsername, string receiverUsername)
+        public async Task<ActionResult<MessageLineViewModel>> GetAsync(string senderUsername)
         {
+            var receiverUsername = User.FindFirst(ClaimTypes.Name)?.Value;
             var messageLine = await this.messageService.GetLastMessage(senderUsername, receiverUsername);
-            var messageLineViewModel = new MessageLineViewModel(senderUsername, receiverUsername, messageLine);
+            var messageLineViewModel = new MessageLineViewModel(receiverUsername, messageLine);
 
             return messageLineViewModel;
         }
 
         [HttpGet("history/{withWhom}")]
-        public async Task<MessageHistroy> GeHistorytAsync(string senderUsername, string withWhom)
+        public async Task<MessageHistroy> GeHistorytAsync(string withWhom)
         {
+            var senderUsername = User.FindFirst(ClaimTypes.Name)?.Value;
             var messageHistory = await this.messageService.GetMessageHistory(senderUsername, withWhom);
             
-
-            //var mapped = this.mapper.Map<MessageViewModel>(messageHistory);
-            //if (mapped == null)
-            //{
-            //    throw new Exception($"Entity could not be mapped.");
-            //}
 
             return messageHistory;
         }
@@ -55,7 +54,8 @@ namespace Message.API.Controllers
         [HttpPost]
         public async Task PostAsync([FromBody]MessageLineViewModel messageLineViewModel)
         {
-            var result = await this.messageService.AddMessage(messageLineViewModel.MessageLine, messageLineViewModel.SenderUsername, messageLineViewModel.ReceiverUsername);
+            var senderUsername = User.FindFirst(ClaimTypes.Name)?.Value;
+            var result = await this.messageService.AddMessage(messageLineViewModel.MessageLine, senderUsername, messageLineViewModel.ReceiverUsername);
             if (result)
             {
                 Ok();
