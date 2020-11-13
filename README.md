@@ -18,7 +18,7 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
 
 - User API: [http://localhost:9000/swagger/index.html](http://localhost:9000/swagger/index.html).
   - **To register**: /api/User/Register
-  - **To ger JWT token**: /api/User/Login
+  - **To get JWT token**: /api/User/Login
   - **To block user**: /api/User/Block/{username}
   - **To find out that you have blocked the user**: /api/User/IsBlockedUser/{username}
   - **To find out you have blocked by whom**: /api/User/IsBlockedByUser/{username}
