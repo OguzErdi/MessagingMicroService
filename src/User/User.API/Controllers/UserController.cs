@@ -63,11 +63,24 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("isblocked/{username}")]
+        [HttpGet("isblockeduser/{username}")]
         public async Task<IActionResult> GetIsBlockedUser(string username)
         {
             string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
             var result = await userService.IsBlockedUser(currentUsername, username);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("isblockedbyuser/{username}")]
+        public async Task<IActionResult> GetIsBlockedByUser(string username)
+        {
+            string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
+            var result = await userService.IsBlockedUser(username, currentUsername);
             if (result.Success)
             {
                 return Ok(result.Data);

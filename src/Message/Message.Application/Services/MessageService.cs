@@ -35,7 +35,7 @@ namespace Message.Application.Services
                 return new ErrorResult(Messages.UserNotFound);
             }
 
-            var isReceiverBlocked = await userProvider.IsUserBlocked(senderUsername, receiverUsername);
+            var isReceiverBlocked = await userProvider.IsBlockedByUser(receiverUsername);
             if (isReceiverBlocked)
             {
                 return new ErrorResult(Messages.UserBlocked);
@@ -80,10 +80,9 @@ namespace Message.Application.Services
                 return new ErrorDataResult<string>(Messages.UserNotFound);
             }
 
-            var isSenderBlocked = await userProvider.IsUserBlocked(receiverUsername, senderUsername);
+            var isSenderBlocked = await userProvider.IsBlockedByUser(receiverUsername);
             if (isSenderBlocked)
             {
-
                 return new ErrorDataResult<string>(Messages.UserBlocked);
             }
 

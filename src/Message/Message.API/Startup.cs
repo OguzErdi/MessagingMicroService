@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using User.Application.Helpers;
 using static Message.API.ViewModels.MessageLineViewModel;
 
 namespace Message.API
@@ -77,8 +78,16 @@ namespace Message.API
                 });
             #endregion
 
+            #region Get AppSettings
+
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            #endregion
+
             #region Project Dependencies
 
+            services.AddHttpContextAccessor();
             services.AddScoped<IMessageDbContext, MessageDbContext>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IKeyGenerator, KeyGenarator>();
