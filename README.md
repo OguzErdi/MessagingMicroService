@@ -25,7 +25,7 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d
   - **To find out is user exist**: /api/User/IsExist/{username}
 
 **Also you can examine logs on Seq page**
--Seq Log Page: [http://localhost:5341/#/events](http://localhost:5341/#/events).
+- Seq Log Page: [http://localhost:5341/#/events](http://localhost:5341/#/events).
 
 
 
