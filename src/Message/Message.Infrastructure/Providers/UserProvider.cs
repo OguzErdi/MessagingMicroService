@@ -1,4 +1,5 @@
-﻿using Message.Core.Providers;
+﻿using Message.Core.AuthorizationGenerator;
+using Message.Core.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -16,22 +17,21 @@ namespace Message.Infrastructure.Providers
     public class UserProvider : IUserProvider
     {
         private readonly AppSettings appSettings;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAuthorizationGenerator authorizationGenerator;
 
-        public UserProvider(IOptions<AppSettings> appSettings, IHttpContextAccessor httpContextAccessor)
+        public UserProvider(IOptions<AppSettings> appSettings, IAuthorizationGenerator authorizationGenerator)
         {
             this.appSettings = appSettings.Value;
-            this.httpContextAccessor = httpContextAccessor;
+            this.authorizationGenerator = authorizationGenerator;
         }
 
         public async Task<bool> IsBlockedByUser(string username)
         {
             using (var httpClient = new HttpClient())
             {
-                var jwt = httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                httpClient.DefaultRequestHeaders.Authorization = authorizationGenerator.GetHeader();
 
-                using (var response = await httpClient.GetAsync(appSettings.UserApi + $"isblockedbyuser/{username}"))
+                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"isblockedbyuser/{username}"}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var isBlocked = JsonConvert.DeserializeObject<bool>(apiResponse);
@@ -44,10 +44,9 @@ namespace Message.Infrastructure.Providers
         {
             using (var httpClient = new HttpClient())
             {
-                var jwt = httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                httpClient.DefaultRequestHeaders.Authorization = authorizationGenerator.GetHeader();
 
-                using (var response = await httpClient.GetAsync(appSettings.UserApi + $"isexist/{username}"))
+                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"isexist/{username}"}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var isExist = JsonConvert.DeserializeObject<bool>(apiResponse);
