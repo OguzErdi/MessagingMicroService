@@ -50,7 +50,7 @@ namespace Message.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("history/{withWhom}")]
+        [HttpGet("History/{withWhom}")]
         public async Task<IActionResult> GeHistorytAsync(string withWhom)
         {
             var senderUsername = User.FindFirst(ClaimTypes.Name)?.Value;

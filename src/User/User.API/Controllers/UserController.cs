@@ -29,7 +29,7 @@ namespace User.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> PostRegister([FromBody] UserRegisterViewModel userRegisterViewModel)
         {
             var result = await userService.RegisterAsync(userRegisterViewModel.Username, userRegisterViewModel.Password, userRegisterViewModel.PasswordRepeat);
@@ -42,7 +42,7 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> PostLoginAsync([FromBody] UserViewModel userViewModel)
         {
             var result = await userService.LoginAsync(userViewModel.Username, userViewModel.Password);
@@ -54,7 +54,7 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost("block/{username}")]
+        [HttpPost("Block/{username}")]
         public async Task<IActionResult> PostBlockUserAsync(string username)
         {
             string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
@@ -67,7 +67,7 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("isblockeduser/{username}")]
+        [HttpGet("IsBlockedUser/{username}")]
         public async Task<IActionResult> GetIsBlockedUser(string username)
         {
             string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
@@ -80,7 +80,7 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("isblockedbyuser/{username}")]
+        [HttpGet("IsBlockedByUser/{username}")]
         public async Task<IActionResult> GetIsBlockedByUser(string username)
         {
             string currentUsername = User.FindFirst(ClaimTypes.Name).Value;
@@ -93,7 +93,7 @@ namespace User.API.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("isexist/{username}")]
+        [HttpGet("IsExist/{username}")]
         public async Task<IActionResult> GetIsUserExist(string username)
         {
             var result = await userService.IsUserExist(username);

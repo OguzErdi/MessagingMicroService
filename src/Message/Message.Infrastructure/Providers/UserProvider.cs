@@ -31,7 +31,7 @@ namespace Message.Infrastructure.Providers
             {
                 httpClient.DefaultRequestHeaders.Authorization = authorizationGenerator.GetHeader();
 
-                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"isblockedbyuser/{username}"}"))
+                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"IsBlockedByUser/{username}"}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var isBlocked = JsonConvert.DeserializeObject<bool>(apiResponse);
@@ -46,7 +46,7 @@ namespace Message.Infrastructure.Providers
             {
                 httpClient.DefaultRequestHeaders.Authorization = authorizationGenerator.GetHeader();
 
-                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"isexist/{username}"}"))
+                using (var response = await httpClient.GetAsync($"{appSettings.UserApi}{$"IsExist/{username}"}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     var isExist = JsonConvert.DeserializeObject<bool>(apiResponse);
